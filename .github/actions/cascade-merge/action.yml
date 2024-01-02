@@ -1,0 +1,9 @@
+name: Cascade Merge
+description: Merges branches into each other in the order given
+inputs:
+  branches:
+    description: The branches to merge, one per line. The branches at the top will be merged into lower branches. Wildcards can be used, order will depend on SEMVER ordering
+    required: true
+runs:
+  using: node16
+  main: dist/index.js

@@ -1,0 +1,34 @@
+name: Propagate mainline branches
+
+on:
+  # Run at specific hours on workdays
+  # - 7AM ET (12pm UTC: 12)
+  # - 1PM ET (6pm UTC: 18)
+  # - 6PM ET (11pm UTC: 23)
+  # - 9PM ET (2am UTC: 2)
+  # schedule:
+  #   - cron: "0 2,12,18,23 * * 1-5"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  propagate:
+    runs-on: ubuntu-latest
+    name: Propagate mainline branches
+    steps:
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: "dev"
+          fetch-depth: 200 # should be enough to perform merges
+
+      - name: Cascade merge
+        id: cascade_merge
+        uses: ./.github/actions/cascade-merge
+        with:
+          branches: |
+            main
+            release-\d+\.\d+\.\d+
+            dev
+            dev-\d+\.\d+\.\d+

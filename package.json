@@ -1,0 +1,19 @@
+{
+  "name": "cascade-semver-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/exec": "^1.1.1",
+    "semver-sort": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/semver-sort": "^0.0.5",
+    "@vercel/ncc": "^0.38.1",
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "build": "ncc build index.ts --minify --out=.github/actions/cascade-merge/dist"
+  }
+}
