@@ -17,10 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Propagate mainline branches
     steps:
-      - name: Checkout dev
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
-          ref: "dev"
+          ref: "main"
           fetch-depth: 200 # should be enough to perform merges
 
       - name: Cascade merge

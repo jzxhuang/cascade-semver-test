@@ -64,13 +64,24 @@ async function run() {
     const remote: string = (await exec.getExecOutput("git remote")).stdout.toString().trim()
 
     // Expand regex rule to valid remote branches
+    const semverRegex = /(.+-)\d+\.\d+\.\d+/g
     const expandedTargetBranches: string[] = targetBranches
       .map((targetBranchExpression) => {
         const re = new RegExp(`^${targetBranchExpression}$`)
         return remoteBranches.filter((remoteBranch) => re.test(remoteBranch))
       })
-      .map((branchGroup) => semverSort.desc(branchGroup))
-      .flat()
+      .flatMap((branchGroup) => {
+        if (branchGroup.length === 1) return branchGroup
+
+        const match = semverRegex.exec(branchGroup[0])
+        if (match) {
+          const group = match[1]
+          const sorted = semverSort.asc(branchGroup.map((b) => b.slice(group.length)))
+          return sorted.map((b) => `${group}${b}`)
+        } else {
+          return semverSort.asc(branchGroup)
+        }
+      })
 
     console.log(`Input branches: ${EOL}- ${targetBranches.join(`${EOL}- `)}`)
     console.log(`Target branches: ${EOL}- ${expandedTargetBranches.join(`${EOL}- `)}`)
